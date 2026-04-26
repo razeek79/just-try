@@ -22,40 +22,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Prevent page horizontal scroll */
-html, body {
-  overflow-x: hidden;
-  max-width: 100%;
-}
-
-/* Images responsive */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Hero logo specific */
-.hero-logo {
-  max-width: 160px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* Mobile buttons stack */
-@media (max-width: 768px) {
-  .hero .fade-in.delay-3 {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px !important;
-  }
-
-  .hero .btn {
-    width: 100%;
-    max-width: 260px;
-  }
-}
-
 /* Typography */
 h1, h2, h3 { font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 1px; color: var(--text-dark); }
 a { text-decoration: none; color: inherit; }
@@ -203,7 +169,7 @@ header {
     min-height: 60vh;
     display: flex;
     align-items: center;
-    background: url('/images/program-cards-imgs/wellness.png') center/cover no-repeat;
+    background: url('images/program-cards-imgs/wellness.png') center/cover no-repeat;
     padding: 80px 5%;
 }
 
@@ -246,7 +212,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-end; /* Text aligned to right */
-    background: url('/images/program-cards-imgs/school.png') center/cover no-repeat;
+    background: url('images/program-cards-imgs/school.png') center/cover no-repeat;
     padding: 80px 5%;
 }
 
@@ -283,19 +249,7 @@ header {
     .btn-group-right .btn { width: 100%; max-width: 250px; }
 }
 
-@media (max-width:768px){
 
-    .signature-section{
-        background-position: 65% center;
-        min-height: 50vh;
-    }
-
-    .institutional-section{
-        background-position: 35% center;
-        min-height: 50vh;
-    }
-
-}
 .divider {
     background-color: var(--primary-red);
     padding: 2px;
@@ -361,4 +315,42 @@ header {
 }
 @media (max-width: 600px) {
     .programs-grid { grid-template-columns: 1fr; }
+}
+
+
+/* =========================================
+   GLOBAL RESPONSIVE FIXES (ADD AT END)
+========================================= */
+/* GLOBAL BASE FIXES */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* HERO SPECIFIC */
+.hero-logo {
+  max-width: 160px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Mobile hero buttons */
+@media (max-width: 768px) {
+  .hero .fade-in.delay-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px !important;
+  }
+
+  .hero .btn {
+    width: 100%;
+    max-width: 260px;
+  }
 }
