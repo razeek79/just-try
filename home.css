@@ -249,6 +249,19 @@ header {
     .btn-group-right .btn { width: 100%; max-width: 250px; }
 }
 
+@media (max-width:768px){
+
+    .signature-section{
+        background-position: 65% center;
+        min-height: 50vh;
+    }
+
+    .institutional-section{
+        background-position: 35% center;
+        min-height: 50vh;
+    }
+
+}
 .divider {
     background-color: var(--primary-red);
     padding: 2px;
