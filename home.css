@@ -169,7 +169,7 @@ header {
     min-height: 60vh;
     display: flex;
     align-items: center;
-    background: url('images/program-cards-imgs/wellness.webp') center/cover no-repeat;
+    background: url('images/program-cards-imgs/wellness.png') center/cover no-repeat;
     padding: 80px 5%;
 }
 
@@ -212,7 +212,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-end; /* Text aligned to right */
-    background: url('images/program-cards-imgs/school.webp') center/cover no-repeat;
+    background: url('images/program-cards-imgs/school.png') center/cover no-repeat;
     padding: 80px 5%;
 }
 
