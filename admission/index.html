@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission | STADO INTERNATIONAL</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        :root {
+            --glass-white: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary-red: #A51C30;
+            --text-silver: #F5F5F7;
+        }
+
+        body { 
+            background-color: #000; 
+            color: var(--text-silver);
+            padding-bottom: 50px;
+        }
+
+        .admission-container {
+            max-width: 800px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+        }
+
+        .admission-card {
+            background: var(--glass-white);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-section h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 8vw, 3rem);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        #subHeading {
+            color: var(--primary-red);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Form Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-red);
+            outline: none;
+            background: #161616;
+        }
+
+        .form-control[readonly] {
+            background: rgba(165, 28, 48, 0.05);
+            border-color: rgba(165, 28, 48, 0.2);
+            color: var(--primary-red);
+            font-weight: 600;
+            cursor: not-allowed;
+        }
+
+        .form-section-title {
+            grid-column: span 2;
+            border-left: 3px solid var(--primary-red);
+            padding-left: 15px;
+            margin: 30px 0 15px;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #871626;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(165, 28, 48, 0.3);
+        }
+
+        /* Mobile Fixes */
+        @media (max-width: 768px) {
+            .admission-container {
+                margin-top: 100px;
+            }
+            .admission-card {
+                padding: 25px 20px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr; /* Stack everything on mobile */
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .form-section-title {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="../images/stado_emblem_compressed.png" alt="STADO">
+                <span class="logo-text">STADO</span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../centers-network.html">Centers</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admission-container">
+        <div class="header-section">
+            <h1>Admission</h1>
+            <p id="subHeading">Securing your spot in excellence</p>
+        </div>
+
+        <div class="admission-card">
+            <form id="admissionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Centre</label>
+                        <input type="text" id="center" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Discipline</label>
+                        <input type="text" id="activity" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-section-title">Personal Details</div>
+                    
+                    <div class="form-group full-width">
+                        <label>Full Name *</label>
+                        <input type="text" id="fullName" class="form-control" required placeholder="As per official ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <select id="gender" class="form-control" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" id="dob" class="form-control" required>
+                    </div>
+
+                    <div class="form-section-title">Contact Information</div>
+
+                    <div class="form-group">
+                        <label>WhatsApp Number *</label>
+                        <input type="tel" id="phone" class="form-control" required placeholder="+91">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="example@email.com">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Full Address *</label>
+                        <textarea id="address" class="form-control" rows="3" required placeholder="House name, Street, City, PIN"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">CONFIRM ADMISSION</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const centerName = params.get('center');
+            const programName = params.get('program');
+
+            if (centerName && programName) {
+                document.getElementById('center').value = centerName;
+                document.getElementById('activity').value = programName;
+                document.getElementById('subHeading').innerText = `${programName} @ STADO ${centerName}`;
+            }
+
+            // Admission submission logic using window.supabaseClient from config.js
+            const form = document.getElementById('admissionForm');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // Add your existing submission logic here using window.supabaseClient
+            });
+        });
+    </script>
+</body>
+</html>

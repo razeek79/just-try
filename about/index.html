@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stado International | About Us</title>
+    <!-- Assuming your style.css now contains the Premium Red System provided -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific page layout tweaks to match premium spacing */
+        main { padding-top: 120px; }
+        .info-box { 
+            background: var(--bg-offwhite); 
+            padding: 40px; 
+            border-radius: 20px; 
+            height: 100%;
+        }
+        .card { 
+            background: var(--bg-white); 
+            border: 1px solid #E5E5E5; 
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .profile-img {
+            border-radius: 20px;
+            filter: grayscale(20%);
+            transition: var(--transition);
+        }
+        .profile-img:hover { filter: grayscale(0%); }
+        
+        .vision-text {
+            font-style: italic;
+            font-size: 1.4rem;
+            color: var(--primary-red);
+            line-height: 1.6;
+        }
+
+        .custom-list {
+            list-style: none;
+            padding: 0;
+        }
+        .custom-list li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            color: var(--text-grey);
+            font-weight: 500;
+        }
+        .custom-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--primary-red);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="images/stado_emblem_compressed.png" alt="Stado Logo">
+                <span class="logo-text">STADO</span>
+            </div>
+            <div class="hamburger" id="hamburger">☰</div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>  
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Summary -->
+        <section class="container text-center reveal" style="padding-bottom: 60px;">
+            <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 25px;">About STADO International</h1>
+            <p style="color: var(--text-dark); font-size: 1.25rem; max-width: 800px; margin: 0 auto 20px auto; font-weight: 400; line-height: 1.6;">
+                STADO International is an institute dedicated to martial arts education, wellness training, and physical development.
+            </p>
+            <p style="color: var(--text-grey); font-size: 1.1rem; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                Our programs combine traditional martial arts discipline with modern training science, helping individuals build strength, confidence, and long-term health.
+            </p>
+        </section>
+
+        <!-- Vision & Mission -->
+        <section class="container reveal">
+            <div class="info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                
+                <div class="info-box reveal" style="border-left: 5px solid var(--primary-red);">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 20px;">Our Vision</h2>
+                    <p class="vision-text">"To create a global network of disciplined and healthy individuals through structured martial arts and wellness education."</p>
+                </div>
+
+                <div class="info-box reveal">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 25px;">Our Mission</h2>
+                    <ul class="custom-list">
+                        <li>Promote martial arts education</li>
+                        <li>Deliver structured wellness programs</li>
+                        <li>Build career opportunities in martial arts</li>
+                        <li>Expand globally through partnerships</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Leadership Card -->
+        <section class="container reveal" style="padding-top: 80px; padding-bottom: 100px;">
+            <div class="card reveal" style="padding: clamp(30px, 5vw, 60px);">
+                <h2 class="text-center" style="font-size: 2.5rem; margin-bottom: 50px;">Leadership</h2>
+                
+                <div class="profile-layout" style="display: flex; flex-wrap: wrap; gap: 50px; align-items: center;">
+                    <div style="flex: 1 1 300px; text-align: center;">
+                        <img src="images/stadocoach.png" alt="Sensei Althameez Hassan" class="profile-img" style="width: 100%; max-width: 400px;" onerror="this.src='images/stado_emblem_compressed.png'">
+                    </div>
+                    
+                    <div class="profile-content" style="flex: 2 1 400px;">
+                        <h3 style="font-size: 2.2rem; color: var(--text-dark); margin-bottom: 5px; text-transform: none; letter-spacing: 0;">Sensei Althameez Hassan</h3>
+                        <p style="color: var(--primary-red); font-weight: 700; font-size: 1rem; margin-bottom: 25px; font-family: var(--font-heading); letter-spacing: 3px;">FOUNDER & CHIEF COACH</p>
+                        
+                        <p style="color: var(--text-grey); margin-bottom: 20px; font-size: 1.15rem; line-height: 1.7;">Leading STADO International with a vision to transform lives through discipline and movement. His core roles include:</p>
+                        
+                        <ul class="custom-list" style="margin-bottom: 30px;">
+                            <li>Professional Martial Arts Instructor</li>
+                            <li>International Event Organizer</li>
+                            <li>Corporate Wellness Strategist</li>
+                            <li>Architect of Structured Physical Education</li>
+                        </ul>
+
+                        <a href="contact.html" class="btn btn-primary">Connect with Sensei</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
