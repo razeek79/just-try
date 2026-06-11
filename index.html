@@ -3,11 +3,534 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admission | STADO INTERNATIONAL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
+    
+    <style>
+        :root {
+            --primary-red: #FF1744;
+            --primary-red-hover: #871626;
+            --bg-dark: #000000;
+            --glass-white: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-silver: #F5F5F7;
+            --text-grey: #888888;
+            --font-heading: 'Oswald', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --success-green: #00E676;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-silver);
+            font-family: var(--font-body);
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 5%; 
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-container img { width: 35px; height: 35px; }
+        .logo-text { font-family: var(--font-heading); font-size: 1.2rem; letter-spacing: 2px; }
+
+        /* Container & Card */
+        .admission-container {
+            max-width: 850px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+        }
+
+        .admission-card {
+            background: var(--glass-white);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            border-radius: 32px;
+            padding: clamp(25px, 5vw, 50px);
+            width: 100%;
+        }
+
+        .header-section { text-align: center; margin-bottom: 40px; }
+        .header-section h1 { font-family: var(--font-heading); font-size: clamp(2rem, 8vw, 3.5rem); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        #subHeading { color: var(--primary-red); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 2px; }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
+        .full-width { grid-column: span 2; }
+
+        label {
+            color: var(--text-grey);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus { border-color: var(--primary-red); outline: none; background: #161616; box-shadow: 0 0 0 4px rgba(165, 28, 48, 0.1); }
+        .form-control[readonly] { background: rgba(165, 28, 48, 0.05); color: var(--primary-red); cursor: not-allowed; border-color: rgba(165, 28, 48, 0.2); }
+
+        .form-section-title {
+            grid-column: span 2;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 15px;
+            margin: 35px 0 15px;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Conditional Elements */
+        .conditional-field { display: none; animation: slideDown 0.4s ease forwards; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Payment Summary */
+        .payment-box {
+            grid-column: span 2;
+            background: rgba(165, 28, 48, 0.05);
+            border: 1px solid rgba(165, 28, 48, 0.2);
+            padding: 25px;
+            border-radius: 18px;
+            margin-top: 20px;
+        }
+
+        .payment-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .payment-total { font-size: 1.4rem; font-weight: 700; color: #fff; font-family: var(--font-heading); }
+
+        /* FALLBACK UPI COPY BOX */
+        .payment-fallback {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-align: center;
+        }
+        .payment-fallback p { font-size: 0.8rem; color: var(--text-grey); margin-bottom: 8px; }
+        .upi-id-badge { display: inline-block; background: #222; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid #444; margin-bottom: 10px; color: #fff; }
+        .copy-btn { background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; text-transform: uppercase; transition: var(--transition); }
+        .copy-btn:hover { background: var(--primary-red); color: #fff; }
+
+        /* Verification Panel Area */
+        .verification-panel {
+            display: none;
+            background: rgba(0, 230, 118, 0.03);
+            border: 1px dashed rgba(0, 230, 118, 0.3);
+            border-radius: 24px;
+            padding: 30px;
+            margin-top: 20px;
+            animation: slideDown 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .verification-panel h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--success-green);
+        }
+
+        /* Button styling */
+        .submit-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 30px;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover:not(:disabled) { background: var(--primary-red-hover); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(165, 28, 48, 0.3); }
+        .submit-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .submit-btn.bright {
+            background: var(--success-green);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 230, 118, 0.4);
+        }
+        .submit-btn.bright:hover {
+            background: #00c864;
+            transform: translateY(-3px);
+        }
+
+        /* System Overlays */
+        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #333; border-top: 4px solid var(--primary-red); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width, .form-section-title, .payment-box { grid-column: span 1; }
+            .admission-container { margin-top: 90px; }
+        }
+    </style>
 </head>
 <body>
-    <a href="upi://pay?pa=razeekfariz6@okaxis&pn=Test&am=1&cu=INR">
-        Test
-    </a>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="../images/stado_emblem_compressed.png" alt="STADO Logo">
+                <span class="logo-text">STADO</span>
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;">ADMISSION PORTAL</div>
+        </nav>
+    </header>
+
+    <main class="admission-container">
+        <div class="header-section">
+            <h1>Admission</h1>
+            <p id="subHeading">Initiating your path to excellence</p>
+        </div>
+
+        <div class="admission-card">
+            <form id="admissionForm">
+                <div class="form-grid" id="mainFormFields">
+                    <div class="form-group">
+                        <label>Selected Centre</label>
+                        <input type="text" id="preferred_center" class="form-control" readonly required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Discipline</label>
+                        <input type="text" id="preferred_activity" class="form-control" readonly required>
+                    </div>
+
+                    <div class="form-section-title">Personal Information</div>
+                    
+                    <div class="form-group full-width">
+                        <label>Full Name *</label>
+                        <input type="text" id="full_name" class="form-control" required placeholder="Legal name as per ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" id="dob" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <select id="gender" class="form-control" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width conditional-field" id="guardian_group">
+                        <label>Guardian Name (Required for Minors) *</label>
+                        <input type="text" id="guardian_name" class="form-control" placeholder="Name of Parent or Legal Guardian">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Applicant Category *</label>
+                        <select id="applicant_type" class="form-control" required>
+                            <option value="" disabled selected>Choose Category</option>
+                            <option value="Student">Student</option>
+                            <option value="Working Professional">Working Professional</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group conditional-field" id="student_group">
+                        <label>Standard / Educational Year *</label>
+                        <input type="text" id="standard" class="form-control" placeholder="e.g., 10th Grade, Final Year B.A">
+                    </div>
+
+                    <div class="form-group conditional-field" id="pro_group">
+                        <label>Current Occupation *</label>
+                        <input type="text" id="occupation" class="form-control" placeholder="Job Title / Business">
+                    </div>
+
+                    <div class="form-section-title">Contact Details</div>
+
+                    <div class="form-group">
+                        <label>WhatsApp Contact *</label>
+                        <input type="tel" id="phone" class="form-control" required placeholder="+91">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="example@email.com">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Full Residential Address *</label>
+                        <textarea id="address" class="form-control" rows="3" required placeholder="Street, City, PIN Code"></textarea>
+                    </div>
+
+                    <div class="payment-box">
+                        <div class="payment-row">
+                            <span style="font-weight: 600; color: var(--text-grey);">Admission Processing Fee</span>
+                            <span class="payment-total">₹500.00</span>
+                        </div>
+                        <p style="font-size: 0.7rem; color: var(--text-grey); margin-top: 10px; line-height: 1.4;">
+                            Note: Your admission details are secured. Press the button below to initiate payment on your smartphone's UPI apps.
+                        </p>
+
+                        <div class="payment-fallback">
+                            <p>If apps fail to open or prompt an error, pay manually to this business VPA:</p>
+                            <div class="upi-id-badge" id="fallbackUpiId">stado7043qr@fbl</div>
+                            <br>
+                            <button type="button" class="copy-btn" id="copyUpiBtn">Copy UPI ID</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verification-panel" id="verificationPanel">
+                    <h3>Confirm UPI Transaction</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-grey); margin-bottom: 20px; line-height: 1.5;">
+                        Please check your banking/UPI app history log for the successful payment receipt and paste the exact <strong style="color:#fff;">12-digit transaction Ref No. / UTR / Transaction ID</strong> below to complete your registration.
+                    </p>
+                    <div class="form-group">
+                        <label>Enter 12-Digit Transaction ID / UTR *</label>
+                        <input type="text" id="user_txn_id" class="form-control" maxlength="12" placeholder="e.g., 349120485921" autocomplete="off">
+                        <span id="validationHint" style="font-size: 0.7rem; color: var(--primary-red); margin-top: 5px; font-weight: 600;"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Proceed to Pay Via UPI</button>
+            </form>
+        </div>
+    </main>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h4 id="loadingText">Processing Security...</h4>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const admissionForm = document.getElementById('admissionForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const mainFormFields = document.getElementById('mainFormFields');
+            const verificationPanel = document.getElementById('verificationPanel');
+            const userTxnInput = document.getElementById('user_txn_id');
+            const validationHint = document.getElementById('validationHint');
+            const overlay = document.getElementById('loading-overlay');
+            const loadingText = document.getElementById('loadingText');
+            const dobInput = document.getElementById('dob');
+            const applicantType = document.getElementById('applicant_type');
+            const copyUpiBtn = document.getElementById('copyUpiBtn');
+
+            // Internal flow control flags
+            let currentFlowStep = "PAYMENT_INITIATION"; 
+            let systemRefOrderMarker = "";
+
+            // URL Parameter Auto-fill
+            const params = new URLSearchParams(window.location.search);
+            const centerVal = params.get('center');
+            const programVal = params.get('program');
+
+            if (centerVal && programVal) {
+                document.getElementById('preferred_center').value = decodeURIComponent(centerVal);
+                document.getElementById('preferred_activity').value = decodeURIComponent(programVal);
+                document.getElementById('subHeading').innerText = `${decodeURIComponent(programVal)} Admission @ STADO ${decodeURIComponent(centerVal)}`;
+            }
+
+            // UI Logic for Conditionals
+            dobInput.addEventListener('change', function() {
+                const age = new Date().getFullYear() - new Date(this.value).getFullYear();
+                const group = document.getElementById('guardian_group');
+                if (this.value && age < 18) group.style.display = 'flex';
+                else group.style.display = 'none';
+            });
+
+            applicantType.addEventListener('change', function() {
+                document.getElementById('student_group').style.display = (this.value === 'Student') ? 'flex' : 'none';
+                document.getElementById('pro_group').style.display = (this.value === 'Working Professional') ? 'flex' : 'none';
+            });
+
+            // Fallback Copy Button Event Action
+            copyUpiBtn.addEventListener('click', () => {
+                const upiString = document.getElementById('fallbackUpiId').innerText;
+                navigator.clipboard.writeText(upiString).then(() => {
+                    copyUpiBtn.innerText = "Copied!";
+                    copyUpiBtn.style.borderColor = "var(--success-green)";
+                    copyUpiBtn.style.color = "var(--success-green)";
+                    setTimeout(() => {
+                        copyUpiBtn.innerText = "Copy UPI ID";
+                        copyUpiBtn.style.borderColor = "var(--primary-red)";
+                        copyUpiBtn.style.color = "var(--primary-red)";
+                    }, 2000);
+                }).catch(err => {
+                    alert("Failed to copy string context: " + err);
+                });
+            });
+
+            // Input parsing to allow strictly numbers and exact 12 digit threshold checks
+            userTxnInput.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+                
+                if (this.value.length === 12) {
+                    validationHint.innerText = "✓ Valid format. Ready to finalize.";
+                    validationHint.style.color = "var(--success-green)";
+                    submitBtn.disabled = false;
+                    submitBtn.classList.add('bright');
+                } else {
+                    validationHint.innerText = `Requires 12 digits (Entered: ${this.value.length})`;
+                    validationHint.style.color = "var(--primary-red)";
+                    submitBtn.disabled = true;
+                    submitBtn.classList.remove('bright');
+                }
+            });
+
+            // Master execution wrapper handling step routing states
+            admissionForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (currentFlowStep === "PAYMENT_INITIATION") {
+                    // STEP 1: Launch Payment Routing
+                    alert("ATTENTION:\n\n1. Select your preferred UPI application on the next system prompt.\n2. Please complete the transaction and note your 12-digit UTR/Ref ID from your bank statement.\n3. Return back to this screen to verify your transaction.");
+                    
+                    submitBtn.disabled = true;
+                    overlay.style.display = 'flex';
+                    loadingText.innerText = "Configuring secure UPI connection...";
+
+                    // Standard clean timestamped reference marker code
+                    systemRefOrderMarker = "STADO" + Date.now();
+
+                    // Standard streamlined parameters without custom string values to pass strict bank firewalls
+                    const upiId = "stado7043qr@fbl"; 
+                    const payeeName = encodeURIComponent("STADO");
+                    const amount = "500.00";
+                    
+                    // Standard compliance layout scheme
+                    const upiUrl = `upi://pay?pa=${upiId}&pn=${payeeName}&tr=${systemRefOrderMarker}&am=${amount}&cu=INR`;
+
+                    // Trigger direct application link mapping context seamlessly
+                    window.location.href = upiUrl;
+
+                    // Fallback state change trigger timeout delay
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        mainFormFields.style.opacity = "0.2";
+                        
+                        // Prevent tweaking basic values during intermediate registration states
+                        Array.from(mainFormFields.getElementsByTagName('input')).forEach(el => el.disabled = true);
+                        Array.from(mainFormFields.getElementsByTagName('select')).forEach(el => el.disabled = true);
+                        Array.from(mainFormFields.getElementsByTagName('textarea')).forEach(el => el.disabled = true);
+                        
+                        // Surface validation UI areas
+                        verificationPanel.style.display = 'block';
+                        submitBtn.innerText = "Complete Registration";
+                        submitBtn.disabled = true; // Lock down button until a clean 12 digit transaction string goes into place
+                        currentFlowStep = "DATABASE_COMMIT";
+                        
+                        // Scroll nicely down towards verification layouts
+                        verificationPanel.scrollIntoView({ behavior: 'smooth' });
+                    }, 1200);
+
+                } else if (currentFlowStep === "DATABASE_COMMIT") {
+                    // STEP 2: Handle database save after verifying string bounds
+                    if (userTxnInput.value.length !== 12) {
+                        alert("Please provide a valid 12-digit transaction ID reference.");
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.classList.remove('bright');
+                    overlay.style.display = 'flex';
+                    loadingText.innerText = "Publishing registration credentials...";
+
+                    try {
+                        const admissionPayload = {
+                            full_name: document.getElementById('full_name').value.trim(),
+                            gender: document.getElementById('gender').value,
+                            dob: dobInput.value,
+                            phone: document.getElementById('phone').value.trim(),
+                            email: document.getElementById('email').value.trim(),
+                            address: document.getElementById('address').value.trim(),
+                            applicant_type: applicantType.value,
+                            preferred_center: document.getElementById('preferred_center').value,
+                            preferred_activity: document.getElementById('preferred_activity').value,
+                            guardian_name: document.getElementById('guardian_name')?.value || null,
+                            standard: document.getElementById('standard')?.value || null,
+                            occupation: document.getElementById('occupation')?.value || null,
+                            application_year: new Date().getFullYear(),
+                            
+                            status: 'Pending Verification',
+                            razorpay_order_id: 'UPI_INTENT_FLOW',
+                            payment_id: userTxnInput.value.trim() 
+                        };
+
+                        // Send straight to Supabase
+                        const { error: dbErr } = await window.supabaseClient
+                            .from('admissions')
+                            .insert([admissionPayload]);
+
+                        if (dbErr) throw new Error(dbErr.message);
+
+                        overlay.style.display = 'none';
+                        alert("Application Submitted Successfully! Admission record stored under status: Pending Verification.");
+                        window.location.href = "../index.html";
+
+                    } catch (err) {
+                        overlay.style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.classList.add('bright');
+                        alert("Registration Error: " + err.message);
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
